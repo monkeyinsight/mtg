@@ -1,0 +1,292 @@
+<html>
+<head>
+<style>
+html,body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-family: Arial, sans-serif;
+	cursor: default;
+}
+.card {
+	display: block;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 7.2em;
+	height: 10.6em;
+	background-color: #fff;
+	-webkit-border-radius: .375em;
+	border-radius: .375em;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	background-color: #000;
+	padding: 0.3em;
+	font-size: 1em;
+	cursor: default;
+	border: 1px transparent solid;
+}
+.card.selected,
+.card:hover {
+	border: 1px #2bff00 solid;
+}
+.card .image {
+	height: 50%;
+	background-size: cover;
+}
+.card .title,
+.card .type {
+	position: relative;
+	height: 8%;
+	font-size: 0.6em;
+	padding: 0 0.2em;
+	white-space: nowrap;
+	overflow: hidden;
+	background: #eee;
+}
+.card .manacost {
+	position: absolute;
+	right: 0;
+	padding: 1px 2px 0 2px;
+	z-index: 1;
+	background: #eee;
+}
+.card .description {
+	box-sizing: border-box;
+	height: 34%;
+	background: #fff;
+	overflow: hidden;
+	font-size: 0.6em;
+	padding: 0.2em;
+	text-overflow: ellipsis;
+}
+.card .power {
+	position: absolute;
+	bottom: 0.3em;
+	right: 0.3em;
+	background: #eee;
+	font-size: 0.7em;
+	padding: 0 0.2em;
+}
+
+.card.white .title,
+.card.white .type,
+.card.white .manacost {
+	background: #eee;
+}
+.card.white .description {
+	background: #fff;
+}
+
+.card.green .title,
+.card.green .type,
+.card.green .manacost {
+	background: #8ebc8e;
+}
+.card.green .description {
+	background: #b2cfb2;
+}
+
+.card.red .title,
+.card.red .type,
+.card.red .manacost {
+	background: #d9b59a;
+}
+.card.red .description {
+	background: #e2cdc2;
+}
+
+.card.blue .title,
+.card.blue .type,
+.card.blue .manacost {
+	background: #cddbe5;
+}
+.card.blue .description {
+	background: #e4ebf5;
+}
+
+.card.black .title,
+.card.black .type,
+.card.black .manacost {
+	background: #b9aca4;
+}
+.card.black .description {
+	background: #e1e0e6;
+}
+
+.card.gold .title,
+.card.gold .type,
+.card.gold .manacost {
+	background: #dec686;
+}
+.card.gold .description {
+	background: #f6efdc;
+}
+
+#library {
+	width: 100%;
+	height: 20%;
+}
+#deck {
+	width: 100%;
+	height: 50%;
+}
+#sideboard {
+	width: 100%;
+	height: 30%;
+}
+
+#library .card {
+	position: relative;
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+.panel {
+	box-sizing: border-box;
+	width: 100%;
+	font-size: 0.8em;
+	height: 20px;
+	background: #eee;
+	line-height: 20px;
+	padding: 0 5px;
+}
+.content {
+	height: 100%;
+	position: relative;
+	overflow: auto;
+}
+
+.drag-to-select {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: #2bff00;
+	display: none;
+	opacity: .3;
+	filter: alpha(opacity=30);
+	z-index: 1000;
+	border: 1px solid #0d6116;
+}
+
+.right {
+	float: right;
+}
+
+#wrapper {
+	height: 100%;
+	padding-bottom: 20px;
+}
+footer {
+	position: relative;
+	background: #eee;
+	height: 12px;
+	margin-top: -37px;
+	z-index: 10000;
+	font-size: 10px;
+	color: #999;
+	padding: 3px 5px;
+}
+footer p {
+	display: inline;
+}
+.resizer {
+	height: 3px;
+	background: #000;
+	cursor: ns-resize !important;
+}
+
+.filters input[type="text"], select {
+	border: 1px #bbb solid;
+	background: #fff;
+	height: 18px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+}
+.filter {
+	border-radius: 3px;
+	padding: 2px 4px;
+	color: #aaa;
+	text-shadow: 1px 1px 1px #fff;
+	text-decoration: none;
+}
+.filter.selected {
+	color: #000;
+	background: transparent;
+	text-shadow: none;
+}
+</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="library">
+		<div class="panel">
+			<form method="post" class="filters">
+				Card Name: <input type="text">
+				<a href="#" class="filter selected">W</a>
+				<a href="#" class="filter selected">U</a>
+				<a href="#" class="filter selected">B</a>
+				<a href="#" class="filter selected">R</a>
+				<a href="#" class="filter selected">G</a>
+				<a href="#" class="filter selected">Colorless</a>
+				<a href="#" class="filter selected">Lands</a>
+				Set:
+				<select>
+					<option value="all">All</option>
+				</select>
+				<a href="#" class="filter selected">Creature</a>
+				<a href="#" class="filter selected">Sorcery</a>
+				<a href="#" class="filter selected">Instant</a>
+				<a href="#" class="filter selected">Enchantment</a>
+				<a href="#" class="filter selected">Planeswalker</a>
+			</form>
+		</div>
+		<div class="content"></div>
+		<div class="resizer" next="deck"></div>
+	</div>
+	<div id="deck">
+		<div class="panel">
+			<div class="right">Order By: <a href="javascript:deck.orderBy('cmc')">cmc</a> <a href="javascript:deck.orderBy('name')">name</a> <a href="javascript:deck.orderBy('color')">color</a></div>
+			<span class="counter"></span> cards
+		</div>
+		<div class="content"></div>
+		<div class="resizer" next="sideboard"></div>
+	</div>
+	<div id="sideboard"><div class="content"></div></div>
+</div>
+<footer>
+	<p>The information presented on this site about <b>Magic: The Gathering</b>, both literal and graphical, is copyrighted by Wizards of the Coast.</p>
+	<p>This website is not produced, endorsed, supported, or affiliated with Wizards of the Coast.</p>
+</footer>
+<script src="js/helper.js"></script>
+<script src="js/workspace.js"></script>
+<script src="js/card.js"></script>
+<script src="js/drag.js"></script>
+<script src="js/select.js"></script>
+<script src="js/resizer.js"></script>
+<script src="js/library.js"></script>
+<script>
+ajax({
+	url: 'http://mtgjson.com/json/AllSets.json',
+	success: function(data) {
+		var database = JSON.parse(data);
+
+			for (var j = 0; j < database.M13.cards.length; j++) {
+			var card = database.M13.cards[j];
+			card.set = "M13";
+			new Card(card, library);
+		}
+	}
+});
+var library = new Workspace({target: document.getElementById('library'), grid: true, library: true});
+var deck = new Workspace({target: document.getElementById('deck'), grid: true, selectable: true, deck: true});
+var sideboard = new Workspace({target: document.getElementById('sideboard'), grid: true, selectable: true});
+//workspace.grid[0].sort(dynamicSort("name"));
+//workspace.orderBy('cmc');
+//deck.restack([0]);
+</script>
+</body>
+</html>
